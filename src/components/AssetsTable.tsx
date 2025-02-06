@@ -8,6 +8,7 @@ interface DataType {
   name: string;
   price: number;
   amount: number;
+  capital: number;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -19,27 +20,36 @@ const columns: TableColumnsType<DataType> = [
     sortDirections: ["descend"],
   },
   {
-    title: "Цена, $",
+    title: "Цена монеты, $",
     dataIndex: "price",
-    defaultSortOrder: "descend",
-    sorter: (a, b) => a.price - b.price
+    sorter: (a, b) => a.price - b.price,
   },
   {
     title: "Количество",
     dataIndex: "amount",
+    sorter: (a, b) => a.amount - b.amount,
+  },
+  {
+    title: "Сумма, $",
+    dataIndex: "capital",
     defaultSortOrder: "descend",
-    sorter: (a, b) => a.amount - b.amount
+    sorter: (a, b) => a.capital - b.capital,
   },
 ];
 
 const AssetsTable = () => {
-  const { assets } = useContext(CryptoContext);
-  const data = assets?.map((asset) => ({
-    key: asset.id,
-    name: asset.name,
-    price: asset.price,
-    amount: asset.amount,
-  }));
+  const { assets, crypto } = useContext(CryptoContext);
+  const data = assets?.map((asset) => {
+    const coin = crypto?.find((c) => c.id === asset.id);
+
+    return {
+      key: asset.id,
+      name: asset.name,
+      price: coin ? +coin.price.toFixed(2) : +asset.price.toFixed(2),
+      amount: asset.amount,
+      capital: +asset.totalAmount.toFixed(2),
+    };
+  });
   return (
     <Table<DataType>
       columns={columns}

@@ -13,7 +13,7 @@ const CryptoModalInfo: FC<Props> = ({ coin }) => {
   }
   return (
     <>
-      <CoinInfo coin={coin} withSymbol/>
+      <CoinInfo coin={coin} withSymbol />
       <Divider />
       <Typography.Title level={4}>Изменения:</Typography.Title>
       <Flex align="center" gap={10}>

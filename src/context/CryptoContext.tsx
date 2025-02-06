@@ -1,19 +1,16 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { fetchAssets, fetchData } from "../api/fetchData";
 import { percentDiff } from "../helpers/percentDiff";
-import {
-  TAssets,
-  TAssetsArray,
-  TAssetsExtendedArray,
-} from "../types/TAssets";
+import { TAssets, TAssetsArray, TAssetsExtended, TAssetsExtendedArray } from "../types/TAssets";
 import { TCryptoArray } from "../types/TCrypto";
 
 interface CryptoContextType {
   assets: TAssetsExtendedArray | undefined;
   crypto: TCryptoArray | undefined;
   loading: boolean;
-  addAsset: (newAsset: TAssets) => void;
+  addAsset: (newAsset: TAssetsExtended) => void;
   removeAsset: (id: string) => void;
+  editAsset: (updatedAsset: TAssets) => void;
 }
 
 interface CryptoContextProviderProps {
@@ -26,6 +23,7 @@ const CryptoContext = createContext<CryptoContextType>({
   assets: [],
   addAsset: () => {},
   removeAsset: () => {},
+  editAsset: () => {},
 });
 
 export function CryptoContextProvider({
@@ -76,17 +74,52 @@ export function CryptoContextProvider({
     preload();
   }, []);
 
-  function addAsset(newAsset: TAssets) {
-    setAssets((prev) => mapAssets([...prev, newAsset], crypto));
+  function addAsset(newAsset: TAssetsExtended) {
+    setAssets((prevAssets) => {
+      const existingAssetIndex = prevAssets.findIndex(
+        (asset) => asset.id === newAsset.id
+      );
+
+      if (existingAssetIndex !== -1) {
+        // Если актив уже существует, обновляем его
+        const updatedAssets = [...prevAssets];
+        const existingAsset = updatedAssets[existingAssetIndex];
+
+        updatedAssets[existingAssetIndex] = {
+          ...existingAsset,
+          amount: existingAsset.amount + newAsset.amount,
+          totalAmount: existingAsset.totalAmount + (newAsset.amount * newAsset.price),
+        };
+
+        console.log(newAsset);
+
+        return mapAssets(updatedAssets, crypto);
+      } else {
+        // Если актива нет, добавляем новый
+        return mapAssets([...prevAssets, newAsset], crypto);
+      }
+    });
   }
 
   function removeAsset(id: string) {
     setAssets((prev) => prev.filter((asset) => asset.id !== id));
   }
 
+  function editAsset(updatedAsset: TAssets) {
+    setAssets((prevAssets) => {
+      return prevAssets.map((asset) => {
+        if (asset.id === updatedAsset.id) {
+          // Обновляем существующий актив, сохраняя все поля, которые не были изменены
+          return { ...asset, ...updatedAsset };
+        }
+        return asset;
+      });
+    });
+  }
+
   return (
     <CryptoContext.Provider
-      value={{ loading, crypto, assets, addAsset, removeAsset }}
+      value={{ loading, crypto, assets, addAsset, removeAsset, editAsset }}
     >
       {children}
     </CryptoContext.Provider>

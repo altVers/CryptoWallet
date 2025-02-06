@@ -14,7 +14,7 @@ const siderStyle: React.CSSProperties = {
 };
 
 export const Sider: FC = () => {
-  const { assets, loading, removeAsset } = useContext(CryptoContext);
+  const { assets, loading, removeAsset, crypto } = useContext(CryptoContext);
 
   if (loading) {
     return (
@@ -26,9 +26,9 @@ export const Sider: FC = () => {
 
   return (
     <Layout.Sider width="35%" style={siderStyle}>
-      {assets?.length ? (
+      {assets?.length && crypto ? (
         assets.map((asset) => (
-          <AssetCard key={asset.id} asset={asset} onRemove={removeAsset} />
+          <AssetCard key={asset.id} asset={asset} onRemove={removeAsset} coins={crypto}/>
         ))
       ) : (
         <Typography.Paragraph>В вашем портфеле нет монет.</Typography.Paragraph>

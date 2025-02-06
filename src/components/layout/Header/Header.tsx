@@ -24,7 +24,7 @@ export const Header = () => {
 
   useEffect(() => {
     const keypress = (e: KeyboardEvent) => {
-      if (e.key === "/") {
+      if (e.key === "/" || e.key === ".") {
         setSelect((prev) => !prev);
       }
     };
@@ -69,8 +69,8 @@ export const Header = () => {
       <Modal
         centered
         open={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
+        footer={null}
       >
         <CryptoModalInfo coin={selectedCoin} />
       </Modal>

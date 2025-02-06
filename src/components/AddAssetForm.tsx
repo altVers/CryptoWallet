@@ -28,7 +28,7 @@ interface Props {
 }
 
 const AddAssetForm: FC<Props> = ({ onClose }) => {
-  const { crypto, addAsset } = useContext(CryptoContext);
+  const { crypto, addAsset, assets, editAsset } = useContext(CryptoContext);
   const [coin, setCoin] = useState<TCrypto | undefined>();
   const [form] = Form.useForm();
   const [submitted, setSubmitted] = useState(false);
@@ -45,6 +45,7 @@ const AddAssetForm: FC<Props> = ({ onClose }) => {
 
       asset.current = newAsset;
       addAsset(newAsset);
+
       setSubmitted(true);
     }
   };
