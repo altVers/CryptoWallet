@@ -4,7 +4,6 @@ import { percentDiff } from "../helpers/percentDiff";
 import {
   TAssets,
   TAssetsArray,
-  TAssetsExtended,
   TAssetsExtendedArray,
 } from "../types/TAssets";
 import { TCryptoArray } from "../types/TCrypto";
@@ -14,6 +13,7 @@ interface CryptoContextType {
   crypto: TCryptoArray | undefined;
   loading: boolean;
   addAsset: (newAsset: TAssets) => void;
+  removeAsset: (id: string) => void;
 }
 
 interface CryptoContextProviderProps {
@@ -25,6 +25,7 @@ const CryptoContext = createContext<CryptoContextType>({
   crypto: [],
   assets: [],
   addAsset: () => {},
+  removeAsset: () => {},
 });
 
 export function CryptoContextProvider({
@@ -79,8 +80,14 @@ export function CryptoContextProvider({
     setAssets((prev) => mapAssets([...prev, newAsset], crypto));
   }
 
+  function removeAsset(id: string) {
+    setAssets((prev) => prev.filter((asset) => asset.id !== id));
+  }
+
   return (
-    <CryptoContext.Provider value={{ loading, crypto, assets, addAsset }}>
+    <CryptoContext.Provider
+      value={{ loading, crypto, assets, addAsset, removeAsset }}
+    >
       {children}
     </CryptoContext.Provider>
   );
