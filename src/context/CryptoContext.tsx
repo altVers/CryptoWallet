@@ -1,14 +1,14 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { fetchAssets, fetchData } from "../api/fetchData";
 import { percentDiff } from "../helpers/percentDiff";
-import { TAssets, TAssetsArray, TAssetsExtended, TAssetsExtendedArray } from "../types/TAssets";
+import { TAssets, TAssetsArray, TAssetsExtendedArray } from "../types/TAssets";
 import { TCryptoArray } from "../types/TCrypto";
 
 interface CryptoContextType {
   assets: TAssetsExtendedArray | undefined;
   crypto: TCryptoArray | undefined;
   loading: boolean;
-  addAsset: (newAsset: TAssetsExtended) => void;
+  addAsset: (newAsset: TAssets) => void;
   removeAsset: (id: string) => void;
   editAsset: (updatedAsset: TAssets) => void;
 }
@@ -74,7 +74,7 @@ export function CryptoContextProvider({
     preload();
   }, []);
 
-  function addAsset(newAsset: TAssetsExtended) {
+  function addAsset(newAsset: TAssets) {
     setAssets((prevAssets) => {
       const existingAssetIndex = prevAssets.findIndex(
         (asset) => asset.id === newAsset.id
@@ -88,10 +88,9 @@ export function CryptoContextProvider({
         updatedAssets[existingAssetIndex] = {
           ...existingAsset,
           amount: existingAsset.amount + newAsset.amount,
-          totalAmount: existingAsset.totalAmount + (newAsset.amount * newAsset.price),
+          totalAmount:
+            existingAsset.totalAmount + newAsset.amount * newAsset.price,
         };
-
-        console.log(newAsset);
 
         return mapAssets(updatedAssets, crypto);
       } else {
@@ -106,15 +105,17 @@ export function CryptoContextProvider({
   }
 
   function editAsset(updatedAsset: TAssets) {
-    setAssets((prevAssets) => {
-      return prevAssets.map((asset) => {
+    console.log(assets);
+    setAssets((prevAssets) =>
+      prevAssets.map((asset) => {
         if (asset.id === updatedAsset.id) {
           // Обновляем существующий актив, сохраняя все поля, которые не были изменены
           return { ...asset, ...updatedAsset };
         }
         return asset;
-      });
-    });
+      })
+    );
+    console.log(assets);
   }
 
   return (

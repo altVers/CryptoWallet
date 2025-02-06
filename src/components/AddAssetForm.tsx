@@ -13,8 +13,7 @@ import {
 } from "antd";
 import { TCrypto } from "../types/TCrypto";
 import CoinInfo from "./CoinInfo";
-import { TAssets, TAssetsExtended } from "../types/TAssets";
-import { percentDiff } from "../helpers/percentDiff";
+import { TAssets } from "../types/TAssets";
 
 type FieldType = {
   amount?: number;
@@ -28,7 +27,7 @@ interface Props {
 }
 
 const AddAssetForm: FC<Props> = ({ onClose }) => {
-  const { crypto, addAsset, assets, editAsset } = useContext(CryptoContext);
+  const { crypto, addAsset } = useContext(CryptoContext);
   const [coin, setCoin] = useState<TCrypto | undefined>();
   const [form] = Form.useForm();
   const [submitted, setSubmitted] = useState(false);
@@ -50,7 +49,7 @@ const AddAssetForm: FC<Props> = ({ onClose }) => {
     }
   };
 
-  const handleAnountChange = (value: number | null): void => {
+  const handleAmountChange = (value: number | null): void => {
     if (coin && value) {
       form.setFieldsValue({
         total: +(value * coin.price).toFixed(2),
@@ -125,7 +124,7 @@ const AddAssetForm: FC<Props> = ({ onClose }) => {
         >
           <InputNumber
             style={{ width: "100%" }}
-            onChange={handleAnountChange}
+            onChange={handleAmountChange}
             min={0}
             placeholder="Сколько купили"
             inputMode="numeric"

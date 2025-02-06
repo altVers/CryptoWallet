@@ -26,12 +26,18 @@ export const Sider: FC = () => {
 
   return (
     <Layout.Sider width="35%" style={siderStyle}>
-      {assets?.length && crypto ? (
+      {assets?.length ? (
         assets.map((asset) => (
-          <AssetCard key={asset.id} asset={asset} onRemove={removeAsset} coins={crypto}/>
+          <AssetCard
+            key={asset.id}
+            asset={asset}
+            onRemove={removeAsset}
+          />
         ))
       ) : (
-        <Typography.Paragraph>В вашем портфеле нет монет.</Typography.Paragraph>
+        <Typography.Paragraph style={{ color: "#fff", fontSize: 20 }}>
+          В вашем портфеле нет монет.
+        </Typography.Paragraph>
       )}
     </Layout.Sider>
   );

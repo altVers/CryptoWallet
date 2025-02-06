@@ -1,21 +1,21 @@
-import { Card, Flex, Statistic, List, Typography, Tag } from "antd";
+import { Card, Flex, Statistic, List, Typography, Tag, Modal } from "antd";
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
   DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { TAssetsExtended } from "../../types/TAssets";
-import { TCryptoArray } from "../../types/TCrypto";
+import AssetModalInfo from "../AssetModalInfo";
 
 interface Props {
   asset: TAssetsExtended;
   onRemove: (id: string) => void;
-  coins: TCryptoArray;
 }
 
-export const AssetCard: FC<Props> = ({ asset, onRemove, coins }) => {
-  const coin = coins.find((c) => c.id === asset.id);
+export const AssetCard: FC<Props> = ({ asset, onRemove }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <Card bordered={false} style={{ width: "100%", marginBottom: 20 }}>
@@ -28,15 +28,26 @@ export const AssetCard: FC<Props> = ({ asset, onRemove, coins }) => {
           prefix={asset.isGrow ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
           suffix="$"
         />
-        <DeleteOutlined
-          style={{
-            width: "30px",
-            height: "30px",
-            fontSize: 20,
-            cursor: "pointer",
-          }}
-          onClick={() => onRemove(asset.id)}
-        />
+        <Flex gap={10}>
+          <EditOutlined
+            style={{
+              width: "30px",
+              height: "30px",
+              fontSize: 20,
+              cursor: "pointer",
+            }}
+            onClick={() => setIsModalOpen(true)}
+          />
+          <DeleteOutlined
+            style={{
+              width: "30px",
+              height: "30px",
+              fontSize: 20,
+              cursor: "pointer",
+            }}
+            onClick={() => onRemove(asset.id)}
+          />
+        </Flex>
       </Flex>
       <List
         bordered
@@ -72,6 +83,19 @@ export const AssetCard: FC<Props> = ({ asset, onRemove, coins }) => {
           </List.Item>
         )}
       />
+      <Modal
+        title={`Редактирование актива — ${asset.name}`}
+        centered
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        destroyOnClose
+      >
+        <AssetModalInfo
+          asset={asset}
+          onCloseModal={() => setIsModalOpen(false)}
+        />
+      </Modal>
     </Card>
   );
 };
