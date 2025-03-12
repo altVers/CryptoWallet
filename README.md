@@ -1,10 +1,11 @@
-# React + Vite
+# Кошелек для крипты
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Запуск
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+npm i
+npm run dev
+```
+Затем нужно создать .env файл в корневой структуре проекта и добавить туда секрет апи с сайта https://openapi.coinstats.app/. Шаблон оставил в файле .env.sample
 
 Палитра — https://color.romanuke.com/czvetovaya-palitra-4567/ 
