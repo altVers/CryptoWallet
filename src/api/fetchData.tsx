@@ -7,7 +7,8 @@ export const fetchData = (): Promise<TCryptoArray> => {
     method: "GET",
     headers: {
       accept: "application/json",
-      "X-API-KEY": `${import.meta.env.VITE_API_KEY}`,
+      "X-API-KEY": `fyQFKB7sNgZ11xUpV/ZQ8CVkPTQ+j8Jy0U3lnayyPmg=`, // оставил для публичного доступа
+      // "X-API-KEY": `${import.meta.env.VITE_API_KEY}`,
     },
   };
 
